@@ -5,16 +5,23 @@ using UnityEngine;
 public class Collectibles : MonoBehaviour
 {
     public bool isCoins = true;
-    public int speedDuration;
-    public float addSpeed;
+    public float speedMultiplier;
+    public float rotateSpeed;
+    void Update()
+    {
+        transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if(isCoins) 
         {
-            Destroy(gameObject);
             PlayerControls pc = other.GetComponent<PlayerControls>();
-            pc.moveSpeed = pc.moveSpeed + addSpeed;
+            Destroy(gameObject);
+            pc.newMoveSpeed = pc.moveSpeed * speedMultiplier;
             pc.score++;
+            pc.startTime = true;
         }
     }
 }

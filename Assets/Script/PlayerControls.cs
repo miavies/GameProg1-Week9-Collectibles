@@ -5,21 +5,27 @@ using UnityEngine;
 public class PlayerControls : MonoBehaviour
 {
     public float moveSpeed;
+    public float newMoveSpeed;
     public float rotationSpeed;
-    public Rigidbody rigidBody;
     public float jumpForce;
-    public int score;
+    public int speedDuration;
+    public float timer;
+    public int score = 0;
+    public bool startTime = false;
+    public Rigidbody rigidBody;
+    
     // Start is called before the first frame update
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
+        newMoveSpeed = moveSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
         // using Input Manager
-        float translation = Input.GetAxis("Vertical") * moveSpeed;
+        float translation = Input.GetAxis("Vertical") * newMoveSpeed;
         float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
         translation *= Time.deltaTime;
         rotation *= Time.deltaTime;
@@ -27,10 +33,24 @@ public class PlayerControls : MonoBehaviour
         transform.Translate(0,0,translation);
         transform.Rotate(0, rotation, 0);
 
+        
+
         if (Input.GetButton("Jump"))
         {
             rigidBody.AddForce(new Vector3(0, jumpForce, 0));
         }
+
+        if (startTime == true)
+        {
+            timer += Time.deltaTime;
+            if (timer >= speedDuration)
+            {
+                newMoveSpeed = moveSpeed;
+                startTime = false;
+                timer = 0f;
+            }
+        }
+        
 
         //another way to move the object
         //if (Input.GetKey(KeyCode.W))
@@ -64,10 +84,6 @@ public class PlayerControls : MonoBehaviour
         //    transform.Rotate(Vector3.right * (Time.deltaTime * moveSpeed));
         //}
 
-
-
-
-
-
     }
+
 }
